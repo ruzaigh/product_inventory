@@ -1,0 +1,175 @@
+sequenceDiagram
+    %% User Authentication Flow
+    participant Client
+    participant AuthController
+    participant User
+    participant JWT
+    
+    %% Authentication Sequence
+    Client->>AuthController: login(username, password)
+    AuthController->>User: authenticate(password)
+    User-->>AuthController: return authResult
+    alt authentication successful
+        AuthController->>JWT: generateToken(userId, role)
+        JWT-->>AuthController: return token
+        AuthController-->>Client: return token and user data
+    else authentication failed
+        AuthController-->>Client: return error message
+    end
+    
+    %% Inventory Management Flow
+    participant InventoryController
+    participant InventoryItem
+    participant InventoryTransaction
+    
+    %% Add New Inventory Item
+    Client->>InventoryController: createInventoryItem(itemData)
+    InventoryController->>InventoryItem: new InventoryItem(itemData)
+    InventoryItem-->>InventoryController: return newItem
+    InventoryController->>InventoryTransaction: createTransaction("add", itemData)
+    InventoryTransaction-->>InventoryController: return transaction
+    InventoryController-->>Client: return newItem
+    
+    %% Update Inventory Item
+    Client->>InventoryController: updateInventoryItem(id, updateData)
+    InventoryController->>InventoryItem: findById(id)
+    InventoryItem-->>InventoryController: return item
+    InventoryController->>InventoryItem: update(updateData)
+    InventoryItem-->>InventoryController: return updatedItem
+    InventoryController->>InventoryTransaction: createTransaction("update", updateData)
+    InventoryTransaction-->>InventoryController: return transaction
+    InventoryController-->>Client: return updatedItem
+    
+    %% Product Management Flow
+    participant ProductController
+    participant Product
+    participant Recipe
+    participant MaterialRequirement
+    
+    %% Create New Product
+    Client->>ProductController: createProduct(productData, recipeData)
+    ProductController->>Product: new Product(productData)
+    Product-->>ProductController: return newProduct
+    ProductController->>Recipe: new Recipe(productId, recipeData)
+    
+    loop For each material in recipeData
+        ProductController->>MaterialRequirement: new MaterialRequirement(materialData)
+        MaterialRequirement-->>Recipe: add materialRequirement
+    end
+    
+    Recipe-->>ProductController: return newRecipe
+    ProductController->>Recipe: calculateProductionCost()
+    Recipe->>MaterialRequirement: getCost()
+    MaterialRequirement->>InventoryItem: getCostPerUnit()
+    InventoryItem-->>MaterialRequirement: return costPerUnit
+    MaterialRequirement-->>Recipe: return materialCost
+    Recipe-->>ProductController: return productionCost
+    ProductController->>Product: setProductionCost(productionCost)
+    Product-->>ProductController: return updatedProduct
+    ProductController-->>Client: return product with recipe
+    
+    %% Produce Items
+    Client->>ProductController: produceItems(productId, quantity)
+    ProductController->>Product: findById(productId)
+    Product-->>ProductController: return product
+    ProductController->>Recipe: findByProductId(productId)
+    Recipe-->>ProductController: return recipe
+    ProductController->>Recipe: canProduce(quantity)
+    Recipe->>InventoryItem: checkAvailability(itemId, requiredQty)
+    InventoryItem-->>Recipe: return availability
+    Recipe-->>ProductController: return productionPossible
+    
+    alt Production possible
+        ProductController->>ProductionBatch: new ProductionBatch(productId, quantity)
+        ProductionBatch-->>ProductController: return batch
+        ProductController->>Recipe: produceProduct(quantity)
+        
+        loop For each material in recipe
+            Recipe->>InventoryItem: adjustQuantity(-requiredQty)
+            InventoryItem-->>Recipe: return updated quantity
+            Recipe->>InventoryTransaction: createTransaction("production", materialData)
+            InventoryTransaction-->>Recipe: return transaction
+        end
+        
+        Recipe-->>ProductController: return success
+        ProductController->>Product: adjustQuantity(+quantity)
+        Product-->>ProductController: return updatedQuantity
+        ProductController->>ProductionBatch: completeProduction()
+        ProductionBatch-->>ProductController: return updatedBatch
+        ProductController-->>Client: return success and updatedProduct
+    else Insufficient materials
+        ProductController-->>Client: return error and missing materials
+    end
+    
+    %% Sales Flow
+    participant SalesController
+    participant Sale
+    participant SaleItem
+    participant Customer
+    participant Receipt
+    
+    %% Create New Sale
+    Client->>SalesController: createSale(saleData, items, customerId)
+    SalesController->>Customer: findById(customerId)
+    Customer-->>SalesController: return customer
+    SalesController->>Sale: new Sale(saleData)
+    Sale-->>SalesController: return newSale
+    
+    loop For each item in items
+        SalesController->>Product: findById(item.productId)
+        Product-->>SalesController: return product
+        SalesController->>SaleItem: new SaleItem(item, product.price)
+        SaleItem-->>SalesController: return saleItem
+        SalesController->>Sale: addItem(saleItem)
+        Sale-->>SalesController: return updatedSale
+        SalesController->>Product: adjustQuantity(-item.quantity)
+        Product-->>SalesController: return updatedProduct
+    end
+    
+    SalesController->>Sale: calculateTotals()
+    Sale-->>SalesController: return updatedSale
+    SalesController->>Sale: recordPayment(paymentMethod, amount)
+    Sale-->>SalesController: return finalizedSale
+    SalesController-->>Client: return sale
+    
+    %% Generate Receipt
+    Client->>SalesController: generateReceipt(saleId)
+    SalesController->>Sale: findById(saleId)
+    Sale-->>SalesController: return sale
+    SalesController->>Customer: findById(sale.customerId)
+    Customer-->>SalesController: return customer
+    SalesController->>Receipt: new Receipt(sale, customer)
+    Receipt-->>SalesController: return receipt
+    SalesController->>Receipt: generateHTML()
+    Receipt-->>SalesController: return htmlContent
+    SalesController-->>Client: return receipt
+    
+    %% Reports Flow
+    participant ReportController
+    participant ReportGenerator
+    
+    %% Generate Sales Report
+    Client->>ReportController: getSalesReport(startDate, endDate)
+    ReportController->>ReportGenerator: generateSalesReport(startDate, endDate)
+    ReportGenerator->>Sale: findByDateRange(startDate, endDate)
+    Sale-->>ReportGenerator: return sales
+    ReportGenerator-->>ReportController: return salesReport
+    ReportController-->>Client: return reportData
+    
+    %% Generate Cost Report
+    Client->>ReportController: getCostReport(startDate, endDate)
+    ReportController->>ReportGenerator: generateCostReport(startDate, endDate)
+    ReportGenerator->>InventoryTransaction: findByDateRange(startDate, endDate)
+    InventoryTransaction-->>ReportGenerator: return transactions
+    ReportGenerator-->>ReportController: return costReport
+    ReportController-->>Client: return reportData
+    
+    %% Generate Revenue Report
+    Client->>ReportController: getRevenueReport(startDate, endDate)
+    ReportController->>ReportGenerator: generateProfitReport(startDate, endDate)
+    ReportGenerator->>Sale: findByDateRange(startDate, endDate)
+    Sale-->>ReportGenerator: return sales
+    ReportGenerator->>InventoryTransaction: findByDateRange(startDate, endDate, "production")
+    InventoryTransaction-->>ReportGenerator: return productionCosts
+    ReportGenerator-->>ReportController: return revenueReport
+    ReportController-->>Client: return reportData
