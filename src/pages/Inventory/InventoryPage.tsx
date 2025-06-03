@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deleteInventoryItem, updateInventoryItem } from '../../store/slices/inventorySlice';
+import { deleteInventoryItem, updateInventoryItem } from '../../store/slices/inventorySlice.js';
 
 const InventoryPage  = () => {
   const dispatch = useDispatch();

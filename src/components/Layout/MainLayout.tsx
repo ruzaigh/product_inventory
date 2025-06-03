@@ -1,13 +1,13 @@
-// src/components/Layout/MainLayout.jsx
-import React from 'react';
+import {FC} from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import Footer from './Footer';
+import Footer from './Footer.js';
+import { RootState } from '../../store'; // Adjust the path if your store is located elsewhere
 
-const MainLayout = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+const MainLayout: FC = () => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deleteSale } from '../../store/slices/salesSlice';
+import { deleteSale } from '../../store/slices/salesSlice.js';
 
 const SalesPage = () => {
   const dispatch = useDispatch();

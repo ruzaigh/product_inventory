@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addSale } from '../../store/slices/salesSlice';
+import { addSale } from '../../store/slices/salesSlice.js';
 
 const NewSalePage = () => {
   const dispatch = useDispatch();

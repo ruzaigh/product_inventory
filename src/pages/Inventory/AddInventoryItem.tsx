@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addInventoryItem } from '../../store/slices/inventorySlice';
+import { addInventoryItem } from '../../store/slices/inventorySlice.js';
 
 const AddInventoryItem = () => {
   const dispatch = useDispatch();
