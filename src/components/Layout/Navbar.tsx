@@ -1,13 +1,14 @@
-// src/components/Layout/Navbar.jsx
-import React, { useState } from 'react';
+import {FC, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
+import { logout } from '../../store/slices/authSlice.js';
+import { RootState } from '../../store';
+import { AppDispatch } from '../../store';
 
-const Navbar = () => {
+const Navbar: FC = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const dispatch: AppDispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
