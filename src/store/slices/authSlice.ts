@@ -1,9 +1,23 @@
-// src/store/slices/authSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+export interface User {
+  id: string;
+  username: string;
+  fullName: string;
+  email: string;
+  role: string;
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+}
 
 // For demonstration, we're using a mock user
 // In a real application, this would be connected to a backend
-const initialState = {
+const initialState: AuthState = {
   isAuthenticated: true, // Auto logged in for demo purposes
   user: {
     id: 'user1',
@@ -15,12 +29,12 @@ const initialState = {
   loading: false,
   error: null
 };
-
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action) => {
+    // Type the action payload for the login reducer
+    login: (state, action: PayloadAction<User> ) => {
       state.isAuthenticated = true;
       state.user = action.payload;
       state.error = null;
@@ -29,13 +43,15 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
-    setLoading: (state, action) => {
+    // Type the action payload for setLoading
+    setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setError: (state, action) => {
+    // Type the action payload for setError
+    setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-      state.loading = false;
-    }
+      state.loading = false; // Error usually implies loading has finished
+    },
   }
 });
 
