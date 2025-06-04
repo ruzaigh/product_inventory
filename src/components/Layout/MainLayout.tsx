@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Footer from './Footer.js';
-import { RootState } from '../../store'; // Adjust the path if your store is located elsewhere
+import { RootState } from '../../store';
 
 const MainLayout: FC = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);

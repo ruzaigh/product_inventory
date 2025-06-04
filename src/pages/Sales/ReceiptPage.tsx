@@ -1,22 +1,24 @@
-import React, { useRef } from 'react';
+import { FC, useRef} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
+import { RootState } from '../../store';
 
-const ReceiptPage = () => {
+
+const ReceiptPage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const receiptRef = useRef();
-  
+
   // Get sale data from Redux store
-  const { sales } = useSelector((state) => state.sales);
+  const { sales } = useSelector((state: RootState) => state.sales);
   const sale = sales.find((s) => s.id === id);
-  
+
   const handlePrint = useReactToPrint({
     content: () => receiptRef.current,
     documentTitle: `Receipt-${sale?.id || 'Not-Found'}`,
   });
-  
+
   // If the sale doesn't exist, show a not found message
   if (!sale) {
     return (
@@ -24,8 +26,8 @@ const ReceiptPage = () => {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           <h2 className="text-xl font-bold mb-2">Receipt Not Found</h2>
           <p>The receipt you're looking for doesn't exist or has been deleted.</p>
-          <button 
-            onClick={() => navigate('/sales')} 
+          <button
+            onClick={() => navigate('/sales')}
             className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
           >
             Back to Sales
@@ -34,11 +36,11 @@ const ReceiptPage = () => {
       </div>
     );
   }
-  
+
   const formatDate = (dateString) => {
-    const options = { 
-      year: 'numeric', 
-      month: 'long', 
+    const options = {
+      year: 'numeric',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -51,13 +53,13 @@ const ReceiptPage = () => {
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold">Receipt</h1>
         <div className="flex space-x-3">
-          <button 
+          <button
             onClick={() => navigate('/sales')}
             className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors"
           >
             Back to Sales
           </button>
-          <button 
+          <button
             onClick={handlePrint}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
           >

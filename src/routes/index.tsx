@@ -1,4 +1,4 @@
-import {FC} from 'react'; // Import ReactNode
+import {FC} from 'react';
 import {Routes, Route, Navigate, RouteProps} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -9,13 +9,13 @@ import LoginPage from '../pages/Auth/LoginPage';
 
 // Main App Pages
 import Dashboard from '../pages/Dashboard';
-import InventoryPage from '../pages/Inventory/InventoryPage.tsx';
-import AddInventoryItem from '../pages/Inventory/AddInventoryItem.tsx';
-import ProductsPage from '../pages/Products/ProductsPage.tsx';
-import AddProductPage from '../pages/Products/AddProductPage.tsx';
-import SalesPage from '../pages/Sales/SalesPage.tsx';
-import NewSalePage from '../pages/Sales/NewSalePage.tsx';
-import ReceiptPage from '../pages/Sales/ReceiptPage.tsx';
+import InventoryPage from '../pages/Inventory/InventoryPage';
+import AddInventoryItem from '../pages/Inventory/AddInventoryItem';
+import ProductsPage from '../pages/Products/ProductsPage';
+import AddProductPage from '../pages/Products/AddProductPage';
+import SalesPage from '../pages/Sales/SalesPage';
+import NewSalePage from '../pages/Sales/NewSalePage';
+import ReceiptPage from '../pages/Sales/ReceiptPage';
 import { RootState } from '../store';
 
 

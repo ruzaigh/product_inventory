@@ -2,7 +2,7 @@ import {ChangeEvent, FC, FormEvent, useState} from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/slices/authSlice.js";
-import { AppDispatch } from "../../store"; // From src/store/index.ts
+import { AppDispatch } from "../../store";
 
 const LoginPage: FC = () => {
   const navigate = useNavigate();
