@@ -1,7 +1,6 @@
-// src/components/Layout/Footer.jsx
-import React from 'react';
+import {FC} from "react";
 
-const Footer = () => {
+const Footer: FC = () => {
   const currentYear = new Date().getFullYear();
   
   return (
