@@ -16,10 +16,12 @@ import AddProductPage from '../pages/Products/AddProductPage';
 import SalesPage from '../pages/Sales/SalesPage';
 import NewSalePage from '../pages/Sales/NewSalePage';
 import ReceiptPage from '../pages/Sales/ReceiptPage';
+import CustomersPage from '../pages/Customers/CustomersPage';
+import AddCustomerPage from '../pages/Customers/AddCustomerPage';
 import { RootState } from '../store';
 
 
-// Auth Guard - Redirects to login if not authenticated
+// Auth Guard - Redirects to log in if not authenticated
 const PrivateRoute: FC<RouteProps> = ({ children }) => {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth);
     return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
@@ -67,6 +69,10 @@ const AppRoutes: FC = () => {
                 <Route path="/sales" element={<SalesPage />} />
                 <Route path="/sales/new" element={<NewSalePage />} />
                 <Route path="/sales/receipt/:id" element={<ReceiptPage />} />
+
+                {/* Customer Management */}
+                <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/customers/add" element={<AddCustomerPage />} />
             </Route>
 
             {/* Catch all - 404 */}

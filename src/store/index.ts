@@ -1,9 +1,9 @@
-// src/store/index.js
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import inventoryReducer from './slices/inventorySlice';
 import productsReducer from './slices/productSlice';
 import salesReducer from './slices/salesSlice';
+import customerReducer from './slices/customerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ export const store = configureStore({
     inventory: inventoryReducer,
     products: productsReducer,
     sales: salesReducer,
+    customers: customerReducer
   },
 });
 
