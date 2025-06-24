@@ -1,4 +1,3 @@
-// @TODO make like authSlice
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 

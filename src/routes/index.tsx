@@ -19,6 +19,7 @@ import ReceiptPage from '../pages/Sales/ReceiptPage';
 import CustomersPage from '../pages/Customers/CustomersPage';
 import AddCustomerPage from '../pages/Customers/AddCustomerPage';
 import { RootState } from '../store';
+import ReportsPage from "../pages/Reports/Reports";
 
 
 // Auth Guard - Redirects to log in if not authenticated
@@ -73,6 +74,9 @@ const AppRoutes: FC = () => {
                 {/* Customer Management */}
                 <Route path="/customers" element={<CustomersPage />} />
                 <Route path="/customers/add" element={<AddCustomerPage />} />
+
+                {/* Reports */}
+                <Route path="/reports" element={<ReportsPage />} />
             </Route>
 
             {/* Catch all - 404 */}
